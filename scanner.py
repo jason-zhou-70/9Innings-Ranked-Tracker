@@ -1,23 +1,24 @@
 from PIL import Image
-from pytesseract import pytesseract
+import cv2
 import tesserocr
+import pytesseract
 
 def main():
-    # path_to_tesseract = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
-    # image_path = r"C:\Users\Jason\Pictures\9Innings-Ranked-Pictures\IMG_1599_2.png"
-
-    # img = Image.open(image_path)
-
-    # pytesseract.tesseract_cmd = path_to_tesseract
-    # text = pytesseract.image_to_string(img)
+    # image = cv2.imread('/home/jason/Pictures/9Innings-Ranked-Pictures/test_cropped.png', cv2.IMREAD_GRAYSCALE)
+    # binary_image = cv2.adaptiveThreshold(image, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2)
+    
+    # img = Image.fromarray(binary_image)
+    # api = tesserocr.PyTessBaseAPI()
+    # api.SetImage(img)
+    # text = api.GetUTF8Text()
     # print(text)
-
-    api = tesserocr.PyTessBaseAPI()
-    img = Image.open(r'C:\Users\Jason\Pictures\9Innings-Ranked-Pictures\IMG_1599.png')
-    api.SetImage(img)
-    text = api.GetUTF8Text()
+    
+    img = cv2.imread('/home/jason/Pictures/9Innings-Ranked-Pictures/test_cropped.png', cv2.IMREAD_GRAYSCALE)
+    thresh = cv2.threshold(img, 100, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
+    thresh = cv2.resize(thresh, (0,0), fx = 2, fy = 1.5)
+    
+    text = pytesseract.image_to_string(thresh, config='--psm 6')
     print(text)
-    print("satg")
 
 if __name__ == "__main__":
     main()
